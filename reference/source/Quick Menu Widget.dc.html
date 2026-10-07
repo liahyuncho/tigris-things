@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..600,0..1,-50..200">
+<style>body{margin:0;background:#EDEDEA;font-family:Pretendard,-apple-system,sans-serif;color:#1E2329;-webkit-font-smoothing:antialiased}a{color:#0B7FD9}a:hover{color:#0866B0}</style>
+</helmet>
+<section style="padding: 56px 64px 24px; display: flex; flex-direction: column; gap: 32px; width: 1855px; height: 1037px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-size:28px;font-weight:700;letter-spacing:-0.02em">추천 레이아웃 · 3–6개 대응</div>
+<div style="font-size:15px;color:#5B6370">메뉴 수가 3개부터 6개까지 바뀌어도 빈칸 없이 위젯을 채우는 구조</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:36px">
+<sc-for list="{{ recs }}" as="r" hint-placeholder-count="3">
+<div id="{{ r.id }}" style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-direction:column;gap:4px">
+<div style="display:flex;align-items:center;gap:10px"><span style="background:#0A72C9;color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">{{ r.id }}</span><span style="font-size:17px;font-weight:700">{{ r.name }}</span><span style="font-size:13px;color:#6B7380">{{ r.style }}</span></div>
+<div style="font-size:13.5px;color:#4A515C;max-width:900px;text-wrap:pretty">{{ r.why }}</div>
+</div>
+<div style="display:flex;gap:24px;zoom:{{ scale }}">
+<sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+<div style="width:338px;height:158px;border-radius:22px;background:{{ r.bg }};box-sizing:border-box;overflow:hidden;box-shadow:0 10px 30px rgba(20,30,50,.08)">
+
+<sc-if value="{{ r.isRow }}" hint-placeholder-val="{{ true }}">
+<div style="height:100%;padding:14px 10px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:8px;padding:0 4px"><img src="assets/tigris-logo.png" style="width:24px;height:24px;border-radius:7px"><span style="font-size:14px;font-weight:700;color:#212D35">티그리스</span></div>
+<div style="display:flex;padding:0 {{ c.pad }}">
+<sc-for list="{{ c.items }}" as="it" hint-placeholder-count="6">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+<div style="width:{{ c.box }};height:{{ c.box }};border-radius:50%;background:#F4F6FA;display:flex;align-items:center;justify-content:center"><div style="width:{{ c.icon }};height:{{ c.icon }};background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div></div>
+<span style="font-size:11.5px;font-weight:500;color:#212D35;white-space:nowrap">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ r.isGrid }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;padding:10px;box-sizing:border-box;display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:1fr;gap:6px">
+<sc-for list="{{ c.items }}" as="it" hint-placeholder-count="6">
+<div style="grid-column:{{ it.span }};background:#fff;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.04);display:flex;flex-direction:{{ c.dir }};align-items:center;justify-content:{{ c.justify }};gap:{{ c.gap }};padding:0 {{ c.tilePad }}">
+<div style="width:{{ c.icon }};height:{{ c.icon }};flex:none;background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:{{ c.font }};font-weight:600;color:#212D35;white-space:nowrap">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ r.isPanel }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;padding:10px;box-sizing:border-box;display:flex;gap:8px">
+<div style="width:96px;flex:none;border-radius:14px;background:#0A72C9;padding:12px 10px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between">
+<img src="assets/tigris-logo.png" style="width:28px;height:28px;border-radius:8px;box-shadow:0 0 0 1.5px rgba(255,255,255,.9)">
+<div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:700;color:#fff;line-height:1.3;word-break:keep-all">좋은 아침이에요</span><span style="font-size:11px;color:#fff">10월 7일 수요일</span></div>
+</div>
+<div style="flex:1;display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:1fr;gap:6px">
+<sc-for list="{{ c.items }}" as="it" hint-placeholder-count="6">
+<div style="grid-column:{{ it.span }};background:#EAF5FF;border-radius:13px;display:flex;flex-direction:{{ c.dir }};align-items:center;justify-content:{{ c.justify }};gap:{{ c.gap }};padding:0 {{ c.tilePad }}">
+<div style="width:{{ c.icon }};height:{{ c.icon }};flex:none;background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:{{ c.font }};font-weight:600;color:#212D35;white-space:nowrap">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+</div>
+<span style="font-size:12px;color:#6B7380;font-weight:600">{{ c.cap }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+<section style="padding: 32px 64px 24px; display: flex; flex-direction: column; gap: 32px; width: 2150px; height: 1551px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-size:28px;font-weight:700;letter-spacing:-0.02em">레이아웃 × 아이콘 스타일</div>
+<div style="font-size:15px;color:#5B6370">행: 레이아웃 1a–1f · 열: 아이콘 스타일 2a–2f · 메뉴 {{ mxCount }}개 (Tweaks에서 6/5/4 전환)</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:36px">
+<sc-for list="{{ matrix }}" as="row" hint-placeholder-count="6">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:10px"><span style="background:#1E2329;color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">{{ row.id }}</span><span style="font-size:17px;font-weight:700">{{ row.name }}</span></div>
+<div style="display:flex;gap:24px">
+<sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="6">
+<div id="{{ c.cid }}" style="display:flex;flex-direction:column;gap:8px;align-items:center">
+<div style="width:338px;height:158px;border-radius:22px;background:{{ c.v.bg }};box-sizing:border-box;overflow:hidden;box-shadow:0 10px 30px rgba(20,30,50,.08)">
+
+<sc-if value="{{ row.isL1 }}" hint-placeholder-val="{{ true }}">
+<div style="height:100%;padding:14px 10px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:8px;padding:0 4px"><img src="assets/tigris-logo.png" style="width:26px;height:26px;border-radius:7px"><span style="font-size:14px;font-weight:700;color:{{ c.v.label }}">티그리스</span></div>
+<div style="display:flex">
+<sc-for list="{{ c.items }}" as="it" hint-placeholder-count="6">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+<div style="width:{{ c.v.box }};height:{{ c.v.box }};border-radius:{{ c.v.radius }};background:{{ c.v.boxBg }};box-shadow:{{ c.v.boxShadow }};display:flex;align-items:center;justify-content:center"><div style="width:{{ c.v.size }};height:{{ c.v.size }};background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div></div>
+<span style="font-size:11.5px;font-weight:500;color:{{ c.v.label }};white-space:nowrap">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ row.isL2 }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;padding:10px;box-sizing:border-box;display:grid;grid-template-columns:{{ c.cols }};grid-auto-rows:1fr;gap:6px">
+<sc-for list="{{ c.items }}" as="it" hint-placeholder-count="6">
+<div style="grid-column:{{ it.colSpan }};background:{{ c.v.tileBg }};border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+<div style="width:26px;height:26px;background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:12px;font-weight:600;color:{{ c.v.label }}">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ row.isL3 }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;padding:8px;box-sizing:border-box;display:grid;grid-template-columns:{{ c.cols }};grid-auto-rows:1fr;gap:6px">
+<sc-for list="{{ c.items }}" as="it" hint-placeholder-count="6">
+<div style="grid-column:{{ it.colSpan }};background:{{ c.v.tileBg }};border-radius:15px;padding:10px 11px;display:flex;flex-direction:column;justify-content:space-between">
+<div style="width:24px;height:24px;background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:13px;font-weight:600;color:{{ c.v.label }}">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ row.isL4 }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;padding:10px 8px;box-sizing:border-box;display:grid;grid-template-columns:{{ c.cols }};grid-auto-rows:1fr;row-gap:2px">
+<sc-for list="{{ c.items }}" as="it" hint-placeholder-count="6">
+<div style="grid-column:{{ it.colSpan }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+<div style="width:{{ c.v.boxSm }};height:{{ c.v.boxSm }};border-radius:{{ c.v.radiusSm }};background:{{ c.v.boxBg }};box-shadow:{{ c.v.boxShadow }};display:flex;align-items:center;justify-content:center"><div style="width:{{ c.v.sizeSm }};height:{{ c.v.sizeSm }};background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div></div>
+<span style="font-size:11.5px;font-weight:500;color:{{ c.v.label }}">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ row.isL5 }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;padding:10px;box-sizing:border-box;display:flex;gap:8px">
+<div style="width:96px;flex:none;border-radius:14px;background:#0A72C9;padding:12px 10px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between">
+<img src="assets/tigris-logo.png" style="width:28px;height:28px;border-radius:8px;box-shadow:0 0 0 1.5px rgba(255,255,255,.9)">
+<div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:700;color:#fff;line-height:1.3;word-break:keep-all">좋은 아침이에요</span><span style="font-size:11px;color:#fff">10월 7일 수요일</span></div>
+</div>
+<div style="flex:1;display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:1fr;gap:6px">
+<sc-for list="{{ c.items }}" as="it" hint-placeholder-count="6">
+<div style="grid-column:{{ it.span6 }};background:{{ c.v.tileBg }};border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+<div style="width:24px;height:24px;background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:11px;font-weight:600;color:{{ c.v.label }}">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ row.isL6 }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column">
+<div style="height:36px;flex:none;background:#0A72C9;display:flex;align-items:center;gap:7px;padding:0 14px"><img src="assets/tigris-logo.png" style="width:20px;height:20px;border-radius:5px;box-shadow:0 0 0 1px rgba(255,255,255,.9)"><span style="font-size:13.5px;font-weight:700;color:#fff;letter-spacing:0.02em">TIGRIS</span></div>
+<div style="flex:1;padding:10px;display:flex">
+<div style="flex:1;display:grid;grid-template-columns:{{ c.rowCols }};grid-auto-rows:1fr;gap:1px;background:{{ c.v.divider }}">
+<sc-for list="{{ c.items }}" as="it" hint-placeholder-count="6">
+<div style="background:{{ c.v.bg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:{{ c.l6gap }}">
+<div style="width:{{ c.l6size }};height:{{ c.l6size }};background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:12px;font-weight:500;color:{{ c.v.label }}">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+<span style="font-size:12px;color:#6B7380;font-weight:600">{{ c.cap }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+<section style="padding: 32px 64px 24px; display: flex; flex-direction: column; gap: 40px; width: 941px; height: 1948px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-size:28px;font-weight:700;letter-spacing:-0.02em">아이콘 스타일 · Tigris office icon pack</div>
+<div style="font-size:15px;color:#5B6370">1a 레이아웃 기준 · 6개 / 4개 · flat(컬러) / line 스타일</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:40px 56px">
+<sc-for list="{{ iconStyles }}" as="v" hint-placeholder-count="6">
+<div id="{{ v.id }}" style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px"><span style="background:#1E2329;color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">{{ v.id }}</span><span style="font-size:17px;font-weight:700">{{ v.name }}</span><span style="font-size:13px;color:#6B7380">{{ v.desc }}</span></div>
+<div style="display:flex;gap:28px;zoom:{{ scale }}">
+<sc-for list="{{ v.states }}" as="s" hint-placeholder-count="2">
+<div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+<div style="width:338px;height:158px;border-radius:22px;background:{{ v.bg }};padding:14px 10px 14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 10px 30px rgba(20,30,50,.08)">
+<div style="display:flex;align-items:center;gap:8px;padding:0 4px">
+<img src="assets/tigris-logo.png" style="width:26px;height:26px;border-radius:7px">
+<span style="font-size:14px;font-weight:700;color:{{ v.label }}">티그리스</span>
+</div>
+<div style="display:flex">
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="6">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+<div style="width:{{ v.box }};height:{{ v.box }};border-radius:{{ v.radius }};background:{{ v.boxBg }};box-shadow:{{ v.boxShadow }};display:flex;align-items:center;justify-content:center"><div style="width:{{ v.size }};height:{{ v.size }};background-image:{{ it.bgImg }};background-size:contain;background-repeat:no-repeat;background-position:center"></div></div>
+<span style="font-size:11.5px;font-weight:500;color:{{ v.label }};white-space:nowrap">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<span style="font-size:12px;color:#6B7380;font-weight:600">{{ s.cap }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+<section style="padding: 32px 64px 96px; display: flex; flex-direction: column; gap: 40px; width: 1393px; height: 1941px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-size:28px;font-weight:700;letter-spacing:-0.02em">티그리스 퀵메뉴 위젯</div>
+<div style="font-size:15px;color:#5B6370">iOS 중형(4x2, 338×158pt) · 메뉴 6 / 5 / 4개 상태 비교 · 사용자가 정한 순서대로 앞에서부터 노출</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:40px 56px">
+
+<div id="1a" style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px"><span style="background:#1E2329;color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">1a</span><span style="font-size:17px;font-weight:700">헤더 + 아이콘 한 줄</span><span style="font-size:13px;color:#6B7380">개수가 줄면 간격이 넓어지며 균등 배치</span></div>
+<div style="display:flex;gap:28px;zoom:{{ scale }}">
+<sc-for list="{{ a }}" as="s" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+<div style="width:338px;height:158px;border-radius:22px;background:#fff;padding:14px 10px 14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 10px 30px rgba(20,30,50,.08)">
+<div style="display:flex;align-items:center;gap:8px;padding:0 4px">
+<img src="assets/tigris-logo.png" style="width:26px;height:26px;border-radius:7px">
+<span style="font-size:14px;font-weight:700">티그리스</span>
+</div>
+<div style="display:flex">
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="6">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+<div style="width:42px;height:42px;border-radius:21px;background:#EAF5FF;display:flex;align-items:center;justify-content:center"><div style="width:22px;height:22px;flex:none;background-image:{{ it.lnBlue }};background-size:contain;background-repeat:no-repeat;background-position:center"></div></div>
+<span style="font-size:11.5px;font-weight:500;color:#2B3038;white-space:nowrap">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<span style="font-size:12px;color:#6B7380;font-weight:600">{{ s.cap }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div id="1b" style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px"><span style="background:#1E2329;color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">1b</span><span style="font-size:17px;font-weight:700">2행 타일 그리드</span><span style="font-size:13px;color:#6B7380">5개는 빈칸을 '추가' 슬롯으로, 4개는 2×2 가로형 타일</span></div>
+<div style="display:flex;gap:28px;zoom:{{ scale }}">
+<sc-for list="{{ b }}" as="s" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+<div style="width:338px;height:158px;border-radius:22px;background:#EEF1F5;padding:10px;box-sizing:border-box;display:grid;grid-template-columns:{{ s.cols }};grid-auto-rows:1fr;gap:6px;box-shadow:0 10px 30px rgba(20,30,50,.08)">
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="6">
+<sc-if value="{{ it.notAdd }}" hint-placeholder-val="{{ true }}">
+<div style="background:#fff;border-radius:14px;display:flex;flex-direction:{{ s.dir }};align-items:center;justify-content:center;gap:{{ s.gap }}">
+<div style="width:22px;height:22px;flex:none;background-image:{{ it.lnBlue }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:12px;font-weight:600;color:#2B3038">{{ it.label }}</span>
+</div>
+</sc-if>
+<sc-if value="{{ it.isAdd }}" hint-placeholder-val="{{ false }}">
+<div style="border:1.5px dashed #C3CBD6;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#6B7380">
+<span style="font-family:'Material Symbols Rounded';font-size:22px">add</span>
+<span style="font-size:12px;font-weight:600">추가</span>
+</div>
+</sc-if>
+</sc-for>
+</div>
+<span style="font-size:12px;color:#6B7380;font-weight:600">{{ s.cap }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div id="1c" style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px"><span style="background:#1E2329;color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">1c</span><span style="font-size:17px;font-weight:700">컬러 타일</span><span style="font-size:13px;color:#6B7380">5개는 첫 메뉴를 세로 2칸으로 키우고, 4개는 2×2</span></div>
+<div style="display:flex;gap:28px;zoom:{{ scale }}">
+<sc-for list="{{ c }}" as="s" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+<div style="width:338px;height:158px;border-radius:22px;background:#fff;padding:8px;box-sizing:border-box;display:grid;grid-template-columns:{{ s.cols }};grid-auto-rows:1fr;gap:6px;box-shadow:0 10px 30px rgba(20,30,50,.08)">
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="6">
+<div style="background:{{ it.color }};grid-row:{{ it.rowSpan }};border-radius:15px;padding:10px 11px;display:flex;flex-direction:column;justify-content:space-between">
+<div style="width:21px;height:21px;flex:none;background-image:{{ it.lnWhite }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:13px;font-weight:600;color:#fff">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+<span style="font-size:12px;color:#6B7380;font-weight:600">{{ s.cap }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div id="1d" style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px"><span style="background:#1E2329;color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">1d</span><span style="font-size:17px;font-weight:700">원형 아이콘 · 레이아웃 전환</span><span style="font-size:13px;color:#6B7380">6개는 2행, 5·4개는 헤더+1행</span></div>
+<div style="display:flex;gap:28px;zoom:{{ scale }}">
+<sc-for list="{{ d }}" as="s" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+<div style="width:338px;height:158px;border-radius:22px;background:#fff;box-sizing:border-box;box-shadow:0 10px 30px rgba(20,30,50,.08);overflow:hidden">
+<sc-if value="{{ s.isGrid }}" hint-placeholder-val="{{ true }}">
+<div style="height:100%;padding:12px 8px;box-sizing:border-box;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;row-gap:4px">
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="6">
+<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px">
+<div style="width:38px;height:38px;border-radius:19px;background:{{ it.color }};display:flex;align-items:center;justify-content:center"><div style="width:21px;height:21px;flex:none;background-image:{{ it.lnWhite }};background-size:contain;background-repeat:no-repeat;background-position:center"></div></div>
+<span style="font-size:11.5px;font-weight:500;color:#2B3038">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ s.isRow }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;padding:14px 12px 14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:7px;padding:0 4px"><img src="assets/tigris-logo.png" style="width:20px;height:20px;border-radius:5px"><span style="font-size:13.5px;font-weight:700">티그리스</span></div>
+<div style="display:flex">
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="5">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">
+<div style="width:40px;height:40px;border-radius:20px;background:{{ it.color }};display:flex;align-items:center;justify-content:center"><div style="width:22px;height:22px;flex:none;background-image:{{ it.lnWhite }};background-size:contain;background-repeat:no-repeat;background-position:center"></div></div>
+<span style="font-size:11.5px;font-weight:500;color:#2B3038">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</div>
+<span style="font-size:12px;color:#6B7380;font-weight:600">{{ s.cap }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div id="1e" style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px"><span style="background:#1E2329;color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">1e</span><span style="font-size:17px;font-weight:700">브랜드 패널 + 그리드</span><span style="font-size:13px;color:#6B7380">6칸 그리드 분할로 빈칸 없이 채움 (5개: 2+3, 4개: 2+2)</span></div>
+<div style="display:flex;gap:28px;zoom:{{ scale }}">
+<sc-for list="{{ e }}" as="s" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+<div style="width:338px;height:158px;border-radius:22px;background:#0A72C9;padding:10px;box-sizing:border-box;display:flex;gap:8px;box-shadow:0 10px 30px rgba(20,30,50,.12)">
+<div style="width:100px;flex:none;padding:6px 4px 6px 6px;display:flex;flex-direction:column;justify-content:space-between">
+<img src="assets/tigris-logo.png" style="width:30px;height:30px;border-radius:8px;box-shadow:0 0 0 1.5px rgba(255,255,255,.9)">
+<div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:700;color:#fff;line-height:1.3">좋은 아침이에요</span><span style="font-size:11.5px;color:#fff">10월 7일 수요일</span></div>
+</div>
+<div style="flex:1;display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:1fr;gap:6px">
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="6">
+<div style="grid-column:{{ it.colSpan }};background:rgba(255,255,255,.15);border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+<div style="width:21px;height:21px;flex:none;background-image:{{ it.lnWhite }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:11px;font-weight:600;color:#fff">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<span style="font-size:12px;color:#6B7380;font-weight:600">{{ s.cap }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div id="1f" style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:10px"><span style="background:#1E2329;color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px">1f</span><span style="font-size:17px;font-weight:700">헤더 바 + 구분선</span><span style="font-size:13px;color:#6B7380">6개는 3×2, 5·4개는 한 줄로 키워서 배치</span></div>
+<div style="display:flex;gap:28px;zoom:{{ scale }}">
+<sc-for list="{{ f }}" as="s" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+<div style="width:338px;height:158px;border-radius:22px;background:#fff;box-sizing:border-box;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 30px rgba(20,30,50,.08)">
+<div style="height:36px;flex:none;background:#0A72C9;display:flex;align-items:center;gap:7px;padding:0 14px"><img src="assets/tigris-logo.png" style="width:20px;height:20px;border-radius:5px;box-shadow:0 0 0 1px rgba(255,255,255,.9)"><span style="font-size:13.5px;font-weight:700;color:#fff;letter-spacing:0.02em">TIGRIS</span></div>
+<div style="flex:1;padding:10px 10px;display:flex">
+<div style="flex:1;display:grid;grid-template-columns:{{ s.cols }};grid-auto-rows:1fr;gap:1px;background:#E6EAF0">
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="6">
+<div style="background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:{{ s.gap }}">
+<div style="width:{{ s.iconSize }};height:{{ s.iconSize }};flex:none;background-image:{{ it.lnDark }};background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+<span style="font-size:12px;font-weight:500;color:#2B3038">{{ it.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+<span style="font-size:12px;color:#6B7380;font-weight:600">{{ s.cap }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;matrixCount&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;6&quot;,&quot;5&quot;,&quot;4&quot;],&quot;default&quot;:&quot;6&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;레이아웃 × 아이콘&quot;},&quot;scale&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1.3,&quot;min&quot;:1,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;보기&quot;},&quot;filledIcons&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;보기&quot;}}">
+class Component extends DCLogic {
+  state = { icons: null };
+  componentDidMount() { import(new URL('icons/icon-data.js', document.baseURI).href).then(m => this.setState({ icons: m.default })); }
+  renderVals() {
+    const ICN = this.state.icons || {};
+    const KEY = { home: 'Home061', chat_bubble: 'Chat002', calendar_month: 'Calendar003', mail: 'Email008', approval: 'Approval005', badge: 'Profile004' };
+    const src = (icon, v) => {
+      const d = ICN[KEY[icon] + (v.style === 'flat' ? 'StyleFlat' : 'StyleLine')];
+      if (!d) return 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22/%3E';
+      const body = d.body.replace(/currentColor/g, v.color || '#212D35');
+      return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + d.viewBox + '">' + body + '</svg>');
+    };
+    const fillOn = this.props.filledIcons ?? false;
+    const u = s => 'url("' + s + '")';
+    const ln = icon => ({ lnBlue: u(src(icon, fillOn ? { style: 'flat' } : { style: 'line', color: '#0B7FD9' })), lnDark: u(src(icon, fillOn ? { style: 'flat' } : { style: 'line', color: '#1E2329' })), lnWhite: u(src(icon, { style: 'line', color: '#fff' })) });
+    const M = [
+      { label: '홈', icon: 'home', h: 245 },
+      { label: '채팅', icon: 'chat_bubble', h: 205 },
+      { label: '캘린더', icon: 'calendar_month', h: 160 },
+      { label: '이메일', icon: 'mail', h: 275 },
+      { label: '전자결재', icon: 'approval', h: 305 },
+      { label: 'HRM', icon: 'badge', h: 50 }
+    ].map(m => ({ ...m, color: `oklch(0.62 0.15 ${m.h})`, notAdd: true, isAdd: false, ...ln(m.icon) }));
+    const st = (fn) => [6, 5, 4].map(n => ({ n, cap: `${n}개`, items: M.slice(0, n), ...fn(n) }));
+    const a = st(() => ({}));
+    const b = st(n => ({
+      cols: n === 4 ? 'repeat(2,1fr)' : 'repeat(3,1fr)',
+      dir: n === 4 ? 'row' : 'column',
+      gap: n === 4 ? '8px' : '3px',
+      items: n === 5 ? [...M.slice(0, 5), { isAdd: true, notAdd: false }] : M.slice(0, n)
+    }));
+    const c = st(n => ({
+      cols: n === 4 ? 'repeat(2,1fr)' : 'repeat(3,1fr)',
+      items: M.slice(0, n).map((m, i) => ({ ...m, rowSpan: n === 5 && i === 0 ? 'span 2' : 'auto' }))
+    }));
+    const d = st(n => ({ isGrid: n === 6, isRow: n !== 6, hasSearch: n === 4 }));
+    const e = st(n => ({
+      items: M.slice(0, n).map((m, i) => ({ ...m, colSpan: n === 6 ? 'span 2' : n === 4 ? 'span 3' : (i < 2 ? 'span 3' : 'span 2') }))
+    }));
+    const f = st(n => ({
+      cols: `repeat(${n === 6 ? 3 : n},1fr)`,
+      gap: n === 6 ? '2px' : '6px',
+      iconSize: n === 6 ? '21px' : '26px'
+    }));
+    const S = [
+      { id: '2a', name: 'Flat 단독', desc: '컨테이너 없이 컬러 flat 아이콘', style: 'flat', box: '42px', size: '32px', radius: '0px', boxBg: 'transparent', boxShadow: 'none', bg: '#fff', label: '#212D35' },
+      { id: '2b', name: 'Flat + 원형', desc: '연회색 원형 위 flat 아이콘', style: 'flat', box: '44px', size: '26px', radius: '22px', boxBg: '#F4F6FA', boxShadow: 'none', bg: '#fff', label: '#212D35' },
+      { id: '2c', name: 'Flat + 카드', desc: '회색 위젯 위 흰 스퀘어클 카드', style: 'flat', box: '44px', size: '26px', radius: '13px', boxBg: '#fff', boxShadow: '0 2px 6px rgba(0,0,0,.04)', bg: '#F4F6FA', label: '#212D35' },
+      { id: '2d', name: 'Line', desc: '아이콘팩 기본 라인 (#212D35)', style: 'line', color: 'rgb(33,45,53)', box: '44px', size: '26px', radius: '22px', boxBg: '#F4F6FA', boxShadow: 'none', bg: '#fff', label: '#212D35' },
+      { id: '2e', name: 'Line 브랜드 블루', desc: '라인 아이콘을 티그리스 블루로', style: 'line', color: '#0A72C9', box: '44px', size: '26px', radius: '22px', boxBg: '#EAF5FF', boxShadow: 'none', bg: '#fff', label: '#212D35' },
+      { id: '2f', name: '다크 + Flat', desc: '다크 위젯 위 flat 아이콘', style: 'flat', box: '44px', size: '26px', radius: '13px', boxBg: 'rgba(255,255,255,.92)', boxShadow: 'none', bg: '#17191D', label: '#E8EAED' }
+    ];
+    const iconStyles = S.map(v => ({ ...v, states: [6, 4].map(n => ({ cap: `${n}개`, items: M.slice(0, n).map(m => ({ ...m, bgImg: 'url("' + src(m.icon, v) + '")' })) })) }));
+    const EXTRA = {
+      '2a': { tileBg: '#F4F6FA', divider: '#E6EAF0', boxSm: '38px', sizeSm: '30px', radiusSm: '0px' },
+      '2b': { tileBg: '#F4F6FA', divider: '#E6EAF0', boxSm: '40px', sizeSm: '24px', radiusSm: '20px' },
+      '2c': { tileBg: '#fff', divider: '#E1E5EC', boxSm: '40px', sizeSm: '24px', radiusSm: '12px' },
+      '2d': { tileBg: '#F4F6FA', divider: '#E6EAF0', boxSm: '40px', sizeSm: '24px', radiusSm: '20px' },
+      '2e': { tileBg: '#EAF5FF', divider: '#DCEBF8', boxSm: '40px', sizeSm: '24px', radiusSm: '20px' },
+      '2f': { tileBg: 'rgba(255,255,255,.08)', divider: 'rgba(255,255,255,.1)', boxSm: '40px', sizeSm: '24px', radiusSm: '12px' }
+    };
+    const LAY = [
+      { id: '1a', name: '헤더 + 아이콘 한 줄', k: 1 }, { id: '1b', name: '2행 타일 그리드', k: 2 }, { id: '1c', name: '타일 (좌상단 아이콘)', k: 3 },
+      { id: '1d', name: '아이콘 그리드', k: 4 }, { id: '1e', name: '브랜드 패널 + 그리드', k: 5 }, { id: '1f', name: '헤더 바 + 구분선', k: 6 }
+    ];
+    const mxCount = Number(this.props.matrixCount ?? 6);
+    const nn = mxCount;
+    const colSpanOf = i => nn === 6 ? 'span 2' : nn === 4 ? 'span 3' : (i < 2 ? 'span 3' : 'span 2');
+    const matrix = LAY.map(l => ({
+      ...l, isL1: l.k === 1, isL2: l.k === 2, isL3: l.k === 3, isL4: l.k === 4, isL5: l.k === 5, isL6: l.k === 6,
+      cells: S.map(v0 => {
+        const v = { ...v0, ...EXTRA[v0.id] };
+        return {
+          v, cid: l.id + '-' + v.id, cap: l.id + ' × ' + v.id + ' ' + v.name,
+          cols: 'repeat(6,1fr)', rowCols: nn === 6 ? 'repeat(3,1fr)' : `repeat(${nn},1fr)`,
+          l6gap: nn === 6 ? '3px' : '7px', l6size: nn === 6 ? '22px' : '28px',
+          items: M.slice(0, nn).map((m, i) => ({ label: m.label, colSpan: colSpanOf(i), span6: colSpanOf(i), bgImg: 'url("' + src(m.icon, v) + '")' }))
+        };
+      })
+    }));
+    const N = [3, 4, 5, 6];
+    const flat = { style: 'flat' }, blue = { style: 'line', color: '#0A72C9' };
+    const img = (m, st) => 'url("' + src(m.icon, st) + '")';
+    const span = (n, i) => n === 3 ? 'span 6' : n === 4 ? 'span 3' : n === 5 ? (i < 2 ? 'span 3' : 'span 2') : 'span 2';
+    const span3 = (n, i) => n === 3 ? 'span 2' : span(n, i);
+    const recs = [
+      { id: '3a', name: '헤더 + 아이콘 한 줄', style: '아이콘: 2b Flat + 원형', isRow: true, bg: '#fff',
+        why: '개수에 관계없이 같은 구조를 유지해요. 3–4개일 때는 아이콘을 키우고 좌우 여백을 넣어 한 줄이 비어 보이지 않게 했어요. 가장 단순하고 예측하기 쉬워 기본안으로 추천해요.',
+        cells: N.map(n => ({ cap: n + '개', pad: n <= 4 ? '12px' : '0px', box: n <= 4 ? '50px' : '44px', icon: n <= 4 ? '30px' : '26px', items: M.slice(0, n).map(m => ({ label: m.label, bgImg: img(m, flat) })) })) },
+      { id: '3b', name: '적응형 타일 그리드', style: '아이콘: 2c Flat + 카드', isGrid: true, bg: '#F4F6FA',
+        why: '6칸 그리드를 나눠 써서 항상 꽉 차요. 3개는 가로형 리스트 3줄, 4개는 2×2, 5개는 2+3, 6개는 3×2로 바뀌어요. 탭 영역이 가장 넓어서 누르기 쉬워요.',
+        cells: N.map(n => ({ cap: n + '개', dir: n <= 4 ? 'row' : 'column', justify: n <= 4 ? 'flex-start' : 'center', gap: n <= 4 ? '10px' : '4px', tilePad: n <= 4 ? '14px' : '0px', icon: n === 3 ? '22px' : '26px', font: n <= 4 ? '13.5px' : '12px', items: M.slice(0, n).map((m, i) => ({ label: m.label, span: span(n, i), bgImg: img(m, flat) })) })) },
+      { id: '3c', name: '브랜드 패널 + 적응형 그리드', style: '아이콘: 2e Line 브랜드 블루', isPanel: true, bg: '#fff',
+        why: '왼쪽 브랜드 패널은 고정하고 오른쪽만 개수에 맞게 바뀌어요. 3개는 한 줄, 4개는 2×2, 5개는 2+3, 6개는 3×2예요. 메뉴가 적을 때도 패널이 공간을 채워서 휑해 보이지 않아요.',
+        cells: N.map(n => ({ cap: n + '개', dir: 'column', justify: 'center', gap: '4px', tilePad: '0px', icon: n === 3 ? '28px' : '24px', font: '11.5px', items: M.slice(0, n).map((m, i) => ({ label: m.label, span: span3(n, i), bgImg: img(m, blue) })) })) }
+    ];
+    return { recs, matrix, mxCount, iconStyles, a, b, c, d, e, f, scale: this.props.scale ?? 1.3, fill: (this.props.filledIcons ?? false) ? 1 : 0 };
+  }
+}
+</script>
+</body>
+</html>
